@@ -1,5 +1,31 @@
 const vscode = require('vscode');
 
+function cleanMessage(text) {
+    let s = text;
+    s = s.replace(/(?:[A-Za-z]:)?[\\\/]?(?:[\w.\-]+[\\\/])+[\w.\-]+\.\w+/g, '');
+    s = s.replace(/:\d+(:\d+)?/g, '');                 
+    s = s.replace(/'[A-Za-z_][^']*'/g, '');            
+    s = s.replace(/"[A-Za-z_][^"]*"/g, '');            
+    s = s.replace(/;?\s*did you mean.*$/i, '');        
+    s = s.replace(/\b(error|warning)\s*:/gi, '');      
+    s = s.replace(/^[\s:]+/, '');                      
+    s = s.replace(/\s+/g, ' ').trim();                 
+    return s;
+}
+
+function languageName(id) {
+    const names = {
+        cpp: 'Cpp',
+        c: 'C',
+        python: 'Python',
+        javascript: 'JavaScript',
+        typescript: 'TypeScript',
+        java: 'Java',
+        csharp: 'Csharp'
+    };
+    return names[id] || id;
+}
+
 function activate(context) {
     const cmd = vscode.commands.registerCommand('error-search.search', () => {
         
@@ -26,7 +52,9 @@ function activate(context) {
         }
 
         
-        const url = 'https://www.google.com/search?q=' + encodeURIComponent(error.message);
+        const lang = languageName(editor.document.languageId);
+        const query = lang + ' ' + cleanMessage(error.message);
+        const url = 'https://www.google.com/search?q=' + encodeURIComponent(query);
         vscode.env.openExternal(vscode.Uri.parse(url));
     });
 
