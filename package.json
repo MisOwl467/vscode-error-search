@@ -18,6 +18,14 @@
       {
         "command": "error-search.searchSelection",
         "title": "Find info about selected error"
+      },
+      {
+        "command": "error-search.showStats",
+        "title": "Show error statistics"
+      },
+      {
+        "command": "error-search.clearStats",
+        "title": "Clear error statistics"
       }
     ],
     "menus": {
