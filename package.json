@@ -3,14 +3,43 @@
   "displayName": "Error Search",
   "description": "Searches the web for a solution to the error under the cursor",
   "version": "0.0.1",
-  "publisher": "student",
+  "publisher": "MisOwl467",
   "engines": { "vscode": "^1.80.0" },
   "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "contributes": {
     "commands": [
       {
         "command": "error-search.search",
-        "title": " Find info about error"
+        "title": "Find info about error"
+      },
+      {
+        "command": "error-search.searchSelection",
+        "title": "Find info about selected error"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "error-search.searchSelection",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        }
+      ],
+      "terminal/context": [
+        {
+          "command": "error-search.searchSelection",
+          "group": "navigation"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "error-search.searchSelection",
+        "key": "ctrl+alt+e",
+        "mac": "cmd+alt+e"
       }
     ]
   }

@@ -26,6 +26,13 @@ function languageName(id) {
     return names[id] || id;
 }
 
+function searchError(message, languageId) {
+    const lang = languageName(languageId);
+    const query = (lang + ' ' + cleanMessage(message)).trim();
+    const url = 'https://www.google.com/search?q=' + encodeURIComponent(query);
+    vscode.env.openExternal(vscode.Uri.parse(url));
+}
+
 function activate(context) {
     const cmd = vscode.commands.registerCommand('error-search.search', () => {
         
@@ -52,13 +59,55 @@ function activate(context) {
         }
 
         
-        const lang = languageName(editor.document.languageId);
-        const query = lang + ' ' + cleanMessage(error.message);
-        const url = 'https://www.google.com/search?q=' + encodeURIComponent(query);
-        vscode.env.openExternal(vscode.Uri.parse(url));
+        searchError(error.message, editor.document.languageId);
     });
 
     context.subscriptions.push(cmd);
+
+    const cmdMessage = vscode.commands.registerCommand('error-search.searchMessage', searchError);
+
+    const provider = vscode.languages.registerCodeActionsProvider('*', {
+        provideCodeActions(document, range, ctx) {
+            return ctx.diagnostics.map(d => {
+                const action = new vscode.CodeAction(
+                    'Find info about error',
+                    vscode.CodeActionKind.QuickFix
+                );
+                action.diagnostics = [d];
+                action.command = {
+                    command: 'error-search.searchMessage',
+                    title: 'Find info about error',
+                    arguments: [d.message, document.languageId]
+                };
+                return action;
+            });
+        }
+    });
+
+    context.subscriptions.push(cmdMessage, provider);
+
+    const cmdSelection = vscode.commands.registerCommand('error-search.searchSelection', async () => {
+        const editor = vscode.window.activeTextEditor;
+        let text = '';
+
+        if (editor && !editor.selection.isEmpty) {
+            text = editor.document.getText(editor.selection);
+        }
+        else {
+            await vscode.commands.executeCommand('workbench.action.terminal.copySelection');
+            text = await vscode.env.clipboard.readText();
+        }
+
+        if (!text.trim()) {
+            vscode.window.showWarningMessage('Выделите текст ошибки');
+            return;
+        }
+
+        const languageId = editor ? editor.document.languageId : '';
+        searchError(text, languageId);
+    });
+
+    context.subscriptions.push(cmdSelection);
 }
 
 function deactivate() {}
