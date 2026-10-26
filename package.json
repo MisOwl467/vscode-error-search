@@ -4,6 +4,10 @@
   "description": "Searches the web for a solution to the error under the cursor",
   "version": "0.0.1",
   "publisher": "MisOwl467",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MisOwl467/vscode-error-search.git"
+  },
   "engines": { "vscode": "^1.80.0" },
   "main": "./extension.js",
   "activationEvents": [
