@@ -109,6 +109,7 @@ identifier "otv" is undefined
 
 | Хеш коммита | Описание |
 |---|---|
+| 639f6b6 | Add README and packaging |
 | 2a2aa6e | Add statistics dashboard and context menu search |
 | 20fac29 | Add search statistics and status bar counter |
 | 0946366 | Add quick fix action and search by selected text |
