@@ -16,7 +16,7 @@ Error Search — расширение для VS Code, которое ищет в
 
 - Поиск ошибки на строке с курсором
 - Пункт **Find info about error** в меню лампочки (Quick Fix) у каждой ошибки
-- Поиск выделенного текста ошибки или фрагмента кода
+- Поиск выделенного текста ошибки (в редакторе или в терминале)
 - Очистка текста ошибки перед поиском
 - Сбор статистики поисков
 - Счётчик поисков за сегодня в строке состояния
@@ -26,7 +26,7 @@ Error Search — расширение для VS Code, которое ищет в
 
 | Команда | Как вызвать | Результат |
 |---|---|---|
-| Find info about error | правый клик по строке с ошибкой, `Ctrl+Alt+F`, лампочка | поиск ошибки на строке с курсором |
+| Find info about error | лампочка → **Find info about error**, или `Cmd+Shift+P` → **Find info about error** | поиск ошибки на строке с курсором |
 | Find info about selected error | выделить текст → правый клик, `Cmd+Alt+E` / `Ctrl+Alt+E` | поиск выделенного текста |
 | Show error statistics | клик по **Errors today** в строке состояния | открывает дашборд |
 | Clear error statistics | кнопка в дашборде или `Cmd+Shift+P` | очищает статистику |
@@ -78,9 +78,8 @@ identifier "otv" is undefined
 | Функция | Параметры | Результат |
 |---|---|---|
 | cleanMessage(text) | text — текст ошибки | очищенный текст для поиска |
-| looksLikeError(text) | text — выделенный текст | `true`, если это ошибка, `false`, если код |
 | languageName(id) | id — язык файла в VS Code | название языка для поиска |
-| searchError(message, languageId, fileName, clean) | текст, язык, файл, нужна ли очистка | сохраняет поиск и открывает браузер |
+| searchError(message, languageId, fileName) | текст ошибки, язык, файл | сохраняет поиск и открывает браузер |
 
 ### Статистика
 
@@ -97,8 +96,18 @@ identifier "otv" is undefined
 
 ## Установка
 
-1. Упаковать расширение: `npx @vscode/vsce package`
-2. В VS Code: **Extensions** → `...` → **Install from VSIX...** → выбрать `error-search-0.0.1.vsix`
+### Готовый пакет
+
+1. Скачать файл `error-search-0.0.1.vsix`
+2. В VS Code: **Extensions** → `...` → **Install from VSIX...** → выбрать скачанный файл
+
+### Сборка пакета из исходников
+
+Требуется Node.js.
+
+1. Открыть папку проекта в терминале
+2. Выполнить `npx @vscode/vsce package` — в папке появится файл `error-search-0.0.1.vsix`
+3. Установить его, как описано выше
 
 ## Запуск для разработки
 
@@ -109,6 +118,7 @@ identifier "otv" is undefined
 
 | Хеш коммита | Описание |
 |---|---|
+| 464222e | Update history in README |
 | 639f6b6 | Add README and packaging |
 | 2a2aa6e | Add statistics dashboard and context menu search |
 | 20fac29 | Add search statistics and status bar counter |
